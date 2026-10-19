@@ -1,172 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Prompt Builder</title>
-    <!-- Tailwind CSS CDN (v2.2.19) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* LUXURIOUS DARK THEME CUSTOMIZATION */
-        :root {
-            --bg-base: #050505;        /* Very dark obsidian */
-            --bg-panel: #0a0a0a;       /* Dark gray for panels */
-            --bg-overlay: #050505;     /* Solid dark for overlay (Fixing the overlap issue) */
-            --bg-bubble-ai: #121212;
-            --border-soft: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(99, 102, 241, 0.3);
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
-        }
-
-        body { 
-            width: 600px; 
-            height: 600px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* Glass & Panel Styles */
-        .lux-panel {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-soft);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .lux-overlay {
-            background-color: var(--bg-overlay);
-            z-index: 50;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-
-        /* Typography & Glow */
-        .text-gradient {
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(99,102,241,0.2);
-        }
-        
-        .btn-lux {
-            background: var(--accent-gradient);
-            box-shadow: 0 2px 15px rgba(99, 102, 241, 0.25);
-            transition: all 0.2s ease;
-        }
-        .btn-lux:hover {
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
-            transform: translateY(-1px);
-        }
-
-        pre { font-family: 'Consolas', monospace; white-space: pre-wrap; word-wrap: break-word; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Master Prompt Builder</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
-<body class="p-4">
+<body>
 
-    <!-- Header -->
-    <header class="pb-3 mb-3 flex justify-between items-center shrink-0 border-b" style="border-color: var(--border-soft);">
-        <div class="flex items-center space-x-3">
-            <div class="p-2 rounded-xl" style="background: var(--accent-gradient);">
-                <i class="fa-solid fa-wand-magic-sparkles text-white drop-shadow-md"></i>
-            </div>
-            <div>
-                <h1 class="text-base font-bold text-gradient">Master Prompt Builder</h1>
-                <p id="currentRoomTitle" class="text-[10px]" style="color: var(--text-muted);">Room Chat Aktif...</p>
-            </div>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 3v4"/><path d="M21 5h-4"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    <symbol id="i-loader" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.55"/></symbol>
+  </svg>
+
+  <div id="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span>
+        <div class="brand-text">
+          <h1>Master Prompt Builder</h1>
+          <p id="currentRoomTitle" class="room-subtitle">Room baru</p>
         </div>
-        <div class="flex space-x-2">
-            <button id="roomsToggleBtn" class="flex items-center space-x-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition hover:bg-white/5" style="border-color: var(--border-soft); color: #818cf8;">
-                <i class="fa-solid fa-list-ul"></i>
-                <span>Daftar Room</span>
-            </button>
-            <button id="settingsToggleBtn" class="flex items-center space-x-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition hover:bg-white/5" style="border-color: var(--border-soft); color: var(--text-muted);">
-                <i class="fa-solid fa-sliders"></i>
-                <span>API</span>
-            </button>
-        </div>
+      </div>
+      <div class="header-actions">
+        <button id="roomsToggleBtn" type="button" class="btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="roomsPanel">
+          <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span>Daftar room</span>
+        </button>
+        <button id="settingsToggleBtn" type="button" class="btn" aria-expanded="false" aria-controls="settingsPanel">
+          <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg><span>Pengaturan</span>
+        </button>
+      </div>
     </header>
 
-    <!-- OVERLAY DAFTAR ROOM (FIXED OVERLAP & SOLID BACKGROUND) -->
-    <div id="roomsPanel" class="hidden absolute inset-0 lux-overlay flex flex-col p-5 transition-opacity duration-200">
-        <div class="flex justify-between items-center pb-3 border-b" style="border-color: var(--border-soft);">
-            <h2 class="text-sm font-semibold flex items-center gap-2" style="color: #818cf8;">
-                <i class="fa-regular fa-comments"></i> Riwayat Room Chat
-            </h2>
-            <button id="closeRoomsBtn" class="hover:text-white transition" style="color: var(--text-muted);"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <section id="settingsPanel" class="settings" aria-label="Pengaturan API" hidden>
+      <div class="field">
+        <label for="apiKey">Gemini API key</label>
+        <div class="key-row">
+          <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="AIza..." aria-describedby="keyHelp">
+          <button id="toggleKeyBtn" type="button" class="icon-btn" aria-label="Tampilkan API key" aria-pressed="false">
+            <svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>
+          </button>
+          <button id="clearKeyBtn" type="button" class="btn">Hapus</button>
         </div>
-        
-        <!-- List Room -->
-        <div id="roomsContainer" class="flex-grow overflow-y-auto space-y-2 mt-4 mb-4 pr-1">
-            <!-- Room items injected here -->
+        <p id="keyHelp" class="help">Disimpan di penyimpanan lokal Chrome pada perangkat ini, tanpa enkripsi. Hanya dikirim ke generativelanguage.googleapis.com.</p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="geminiModel">Model</label>
+          <select id="geminiModel"></select>
         </div>
+        <div class="field">
+          <label for="effortLevel">Tingkat berpikir</label>
+          <select id="effortLevel"></select>
+        </div>
+      </div>
+    </section>
 
-        <!-- Tombol Room Baru -->
-        <div class="pt-4 border-t shrink-0" style="border-color: var(--border-soft);">
-            <button id="createNewRoomBtn" class="w-full font-medium py-2.5 rounded-lg text-xs flex justify-center items-center space-x-2 transition border" style="background-color: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3); color: #a5b4fc;">
-                <i class="fa-solid fa-plus"></i>
-                <span>Buat Room Chat Baru</span>
-            </button>
-        </div>
+    <div id="chatBox" class="chat" role="log" aria-live="polite" aria-label="Percakapan penyusunan prompt" tabindex="0"></div>
+
+    <footer class="composer">
+      <p id="status" class="status" role="status" data-kind=""></p>
+      <label for="userPrompt" class="sr-only">Instruksi, ide, atau revisi prompt</label>
+      <textarea id="userPrompt" rows="3" placeholder="Tulis ide prompt, atau instruksi revisi untuk prompt terakhir..."></textarea>
+      <div class="composer-row">
+        <span class="hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> untuk kirim</span>
+        <button id="sendBtn" type="button" class="btn btn-primary"></button>
+      </div>
+    </footer>
+  </div>
+
+  <div id="roomsPanel" class="rooms" role="dialog" aria-modal="true" aria-labelledby="roomsTitle" hidden>
+    <div class="rooms-head">
+      <h2 id="roomsTitle">Riwayat room</h2>
+      <button id="closeRoomsBtn" type="button" class="icon-btn" aria-label="Tutup daftar room">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
     </div>
-
-    <!-- Settings Panel (Panel Dropdown) -->
-    <div id="settingsPanel" class="hidden lux-panel p-4 rounded-xl space-y-3 mb-3 shrink-0 absolute left-4 right-4 top-16 z-40">
-        <div class="flex justify-between items-center border-b pb-2" style="border-color: var(--border-soft);">
-            <h2 class="text-sm font-semibold flex items-center gap-2" style="color: #818cf8;"><i class="fa-solid fa-gear"></i> Konfigurasi API</h2>
-            <button id="closeSettingsBtn" class="hover:text-white transition" style="color: var(--text-muted);"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="space-y-2">
-            <div class="relative">
-                <input type="password" id="apiKey" placeholder="Gemini API Key (AIzaSy...)" class="w-full rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1" style="background-color: #000; border: 1px solid var(--border-soft); color: white; border-color: var(--border-soft);">
-                <button type="button" id="toggleEyeBtn" class="absolute right-3 top-2" style="color: var(--text-muted);">
-                    <i id="eyeIcon" class="fa-solid fa-eye"></i>
-                </button>
-            </div>
-            <div class="flex space-x-2 pt-1">
-                <select id="geminiModel" class="w-1/2 rounded-lg px-2 py-1.5 text-[10px]" style="background-color: #000; border: 1px solid var(--border-soft); color: white;">
-                    <option value="gemini-3.5-flash-lite">3.5 Flash-Lite</option>
-                    <option value="gemini-3.6-flash" selected>3.6 Flash</option>
-                    <option value="gemini-3.1-pro">3.1 Pro</option>
-                </select>
-                <select id="effortLevel" class="w-1/2 rounded-lg px-2 py-1.5 text-[10px]" style="background-color: #000; border: 1px solid var(--border-soft); color: white;">
-                    <option value="MEDIUM">Medium Effort</option>
-                    <option value="HIGH">High Effort</option>
-                    <option value="LOW">Low Effort</option>
-                </select>
-            </div>
-        </div>
+    <ul id="roomsList" class="rooms-list"></ul>
+    <div class="rooms-foot">
+      <button id="newRoomBtn" type="button" class="btn btn-primary btn-block">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>Room baru</span>
+      </button>
     </div>
+  </div>
 
-    <!-- Chat Box Area -->
-    <div id="chatBox" class="flex-grow lux-panel rounded-xl p-4 mb-3 overflow-y-auto flex flex-col space-y-4">
-        <!-- Bubbles injected here -->
-    </div>
-
-    <!-- Input Area -->
-    <div class="shrink-0 lux-panel rounded-xl p-3 flex flex-col space-y-2">
-        <textarea id="userPrompt" rows="2" placeholder="Ketik instruksi, ide, atau revisi prompt di sini..." class="w-full rounded-lg p-2.5 text-xs focus:outline-none resize-none transition" style="background-color: #000; border: 1px solid var(--border-soft); color: white;"></textarea>
-        <div class="flex justify-between items-center">
-            <span class="text-[10px]" style="color: var(--text-muted);">Tekan <kbd class="px-1.5 py-0.5 rounded bg-gray-800 border border-gray-700">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-gray-800 border border-gray-700">Enter</kbd> untuk Kirim</span>
-            <button id="generateBtn" class="btn-lux text-white font-medium px-4 py-1.5 rounded-lg text-xs flex items-center space-x-2 cursor-pointer">
-                <i id="btnIcon" class="fa-solid fa-paper-plane"></i>
-                <span id="btnText">Kirim</span>
-            </button>
-        </div>
-    </div>
-
-    <script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
 </html>
