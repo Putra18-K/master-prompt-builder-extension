@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Master Prompt Builder",
+  "version": "1.0",
+  "description": "Tools untuk menyusun Master Prompt terstruktur (Role, Task, Context, Reasoning, Stop, Output).",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Buka Master Prompt Builder"
+  },
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*"
+  ]
+}
