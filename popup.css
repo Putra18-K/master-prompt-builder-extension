@@ -129,10 +129,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 select { height: 34px; padding: 0 8px; }
 
 /* Chat */
-.chat {
-  flex: 1; min-height: 0; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 12px;
-  padding: 16px;
+.chat > * {
+  flex-shrink: 0;
 }
 .chat::-webkit-scrollbar, .rooms-list::-webkit-scrollbar { width: 8px; }
 .chat::-webkit-scrollbar-track, .rooms-list::-webkit-scrollbar-track { background: transparent; }
@@ -148,9 +146,11 @@ select { height: 34px; padding: 0 8px; }
 }
 
 .card {
+  flex: none;
   align-self: stretch;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 .card-head {
   display: flex; align-items: center; justify-content: space-between;
